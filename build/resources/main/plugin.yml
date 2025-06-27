@@ -1,0 +1,8 @@
+name: BlockClock
+version: '1.0'
+main: dev.dvxq.blockclock.BlockClock
+api-version: '1.16'
+depend: [WorldEdit]
+commands:
+  test:
+  updatec:
