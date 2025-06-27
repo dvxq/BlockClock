@@ -15,10 +15,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import dev.dvxq.blockclock.BlockClock;
 import dev.dvxq.blockclock.config.GeneralConfig;
-import dev.dvxq.blockclock.placement.HourFirstStrategy;
-import dev.dvxq.blockclock.placement.HourSecondStrategy;
-import dev.dvxq.blockclock.placement.MinuteFirstStrategy;
-import dev.dvxq.blockclock.placement.MinuteSecondStrategy;
+import dev.dvxq.blockclock.placement.*;
 import org.bukkit.Location;
 
 import java.io.File;
@@ -42,7 +39,6 @@ public class ClockManager {
 
         Clipboard clipboard = null;
         File file = new File(new File(plugin.getDataFolder(), "schems"), number + ".schem");
-        System.out.println(file == null);
         ClipboardFormat format = ClipboardFormats.findByFile(file);
         try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
             clipboard = reader.read();
@@ -68,11 +64,15 @@ public class ClockManager {
         ClockNumber hourSecond = new ClockNumber(new HourSecondStrategy(this, config));
         ClockNumber minuteFirst = new ClockNumber(new MinuteFirstStrategy(this, config));
         ClockNumber minuteSecond = new ClockNumber(new MinuteSecondStrategy(this, config));
+        ClockNumber secondFirst = new ClockNumber(new SecondFirstStrategy(this, config));
+        ClockNumber secondSecond = new ClockNumber(new SecondSecondStrategy(this, config));
 
         list.add(hourFirst);
         list.add(hourSecond);
         list.add(minuteSecond);
         list.add(minuteFirst);
+        list.add(secondFirst);
+        list.add(secondSecond);
 
         for (ClockNumber number : list) {
             number.build();
@@ -83,11 +83,14 @@ public class ClockManager {
         LocalTime currentTime = LocalTime.now();
         int hours = currentTime.getHour();
         int minutes = currentTime.getMinute();
+        int seconds = currentTime.getSecond();
 
         int hourFirst = hours / 10;
         int hourSecond = hours % 10;
         int minuteFirst = minutes / 10;
         int minuteSecond = minutes % 10;
+        int secondFirst = seconds / 10;
+        int secondSecond = secondFirst % 10;
 
         switch (digitType) {
             case HOUR_FIRST:
@@ -98,6 +101,10 @@ public class ClockManager {
                 return minuteFirst;
             case MINUTE_SECOND:
                 return minuteSecond;
+            case SECOND_FIRST:
+                return secondFirst;
+            case SECOND_SECOND:
+                return secondSecond;
             default:
                 plugin.getLogger().warning("Unknown digit type: " + digitType);
                 return 0;
@@ -107,6 +114,8 @@ public class ClockManager {
         HOUR_FIRST,
         HOUR_SECOND,
         MINUTE_FIRST,
-        MINUTE_SECOND
+        MINUTE_SECOND,
+        SECOND_FIRST,
+        SECOND_SECOND
     }
 }

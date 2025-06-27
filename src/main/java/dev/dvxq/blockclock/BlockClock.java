@@ -3,11 +3,9 @@ package dev.dvxq.blockclock;
 import dev.dvxq.blockclock.commands.UpdateClockCommand;
 import dev.dvxq.blockclock.commands.tes;
 import dev.dvxq.blockclock.config.GeneralConfig;
-import dev.dvxq.blockclock.placement.HourFirstStrategy;
-import dev.dvxq.blockclock.placement.HourSecondStrategy;
-import dev.dvxq.blockclock.placement.MinuteFirstStrategy;
-import dev.dvxq.blockclock.placement.MinuteSecondStrategy;
+import dev.dvxq.blockclock.placement.*;
 import dev.dvxq.blockclock.util.ClockManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +19,8 @@ public final class BlockClock extends JavaPlugin {
     private HourSecondStrategy hourSecondStrategy;
     private MinuteFirstStrategy minuteFirstStrategy;
     private MinuteSecondStrategy minuteSecondStrategy;
+    private SecondFirstStrategy secondFirstStrategy;
+    private SecondSecondStrategy secondSecondStrategy;
     @Override
     public void onEnable() {
         ensurePluginExistence();
@@ -35,9 +35,15 @@ public final class BlockClock extends JavaPlugin {
         hourSecondStrategy = new HourSecondStrategy(clockManager, config);
         minuteFirstStrategy = new MinuteFirstStrategy(clockManager, config);
         minuteSecondStrategy = new MinuteSecondStrategy(clockManager, config);
+        secondFirstStrategy = new SecondFirstStrategy(clockManager, config);
+        secondSecondStrategy = new SecondSecondStrategy(clockManager, config);
 
         getCommand("test").setExecutor(new tes(clockManager));
         getCommand("updatec").setExecutor(new UpdateClockCommand(clockManager));
+
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            clockManager.placeClock();
+        }, 0L, 20L);
     }
 
     @Override

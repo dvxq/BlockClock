@@ -15,7 +15,6 @@ public class MinuteFirstStrategy implements PlacementStrategy {
     @Override
     public void place() {
         int number = clockManager.getDigit(ClockManager.TimeDigit.MINUTE_FIRST);
-//        if (number > 0 && number < 6)
-            clockManager.place(config.getHourSecond(), number);
+        if (number > -1 && number < 6) clockManager.place(config.getMinuteFirst(), number);
     }
 }

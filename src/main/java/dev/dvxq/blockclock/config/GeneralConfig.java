@@ -13,12 +13,13 @@ public class GeneralConfig {
     private final FileConfiguration config;
     private final BlockClock plugin;
 
-
     public World world;
     public Location hourFirst;
     public Location hourSecond;
     public Location minuteFirst;
     public Location minuteSecond;
+    public Location secondFirst;
+    public Location secondSecond;
     private org.bukkit.World bukkitWorld;
 
     public GeneralConfig(FileConfiguration config, BlockClock plugin) {
@@ -40,7 +41,7 @@ public class GeneralConfig {
         } else world = BukkitAdapter.adapt(bukkitWorld);
 
         String[] coordinateKeys = {
-                "hour-first", "hour-second", "minute-first", "minute-second"
+                "hour-first", "hour-second", "minute-first", "minute-second", "second-first", "second-second"
         };
 
         for (String key : coordinateKeys) {
@@ -72,6 +73,14 @@ public class GeneralConfig {
                     }
                     case "minute-second": {
                         minuteSecond = new Location(bukkitWorld, x, y, z);
+                        break;
+                    }
+                    case "second-first": {
+                        secondFirst = new Location(bukkitWorld, x, y, z);
+                        break;
+                    }
+                    case "second-second": {
+                        secondSecond = new Location(bukkitWorld, x, y, z);
                         break;
                     }
                 }
