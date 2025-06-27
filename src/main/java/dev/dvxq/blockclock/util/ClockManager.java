@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClockManager {
@@ -40,6 +41,7 @@ public class ClockManager {
         Clipboard clipboard = null;
         File file = new File(new File(plugin.getDataFolder(), "schems"), number + ".schem");
         ClipboardFormat format = ClipboardFormats.findByFile(file);
+
         try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
             clipboard = reader.read();
         } catch (FileNotFoundException e) {
@@ -47,6 +49,7 @@ public class ClockManager {
         } catch (IOException e) {
             plugin.getLogger().warning("Error while reading schem: " + e.getMessage());
         }
+
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
@@ -58,23 +61,16 @@ public class ClockManager {
         }
     }
     public void placeClock() {
-        List<ClockNumber> list = new ArrayList<>();
+        List<ClockNumber> strategies = Arrays.asList(
+                new ClockNumber(new HourFirstStrategy(this, config)),
+                new ClockNumber(new HourSecondStrategy(this, config)),
+                new ClockNumber(new MinuteFirstStrategy(this, config)),
+                new ClockNumber(new MinuteSecondStrategy(this, config)),
+                new ClockNumber(new SecondFirstStrategy(this, config)),
+                new ClockNumber(new SecondSecondStrategy(this, config))
+        );
 
-        ClockNumber hourFirst = new ClockNumber(new HourFirstStrategy(this, config));
-        ClockNumber hourSecond = new ClockNumber(new HourSecondStrategy(this, config));
-        ClockNumber minuteFirst = new ClockNumber(new MinuteFirstStrategy(this, config));
-        ClockNumber minuteSecond = new ClockNumber(new MinuteSecondStrategy(this, config));
-        ClockNumber secondFirst = new ClockNumber(new SecondFirstStrategy(this, config));
-        ClockNumber secondSecond = new ClockNumber(new SecondSecondStrategy(this, config));
-
-        list.add(hourFirst);
-        list.add(hourSecond);
-        list.add(minuteSecond);
-        list.add(minuteFirst);
-        list.add(secondFirst);
-        list.add(secondSecond);
-
-        for (ClockNumber number : list) {
+        for (ClockNumber number : strategies) {
             number.build();
         }
     }
@@ -93,18 +89,12 @@ public class ClockManager {
         int secondSecond = seconds % 10;
 
         switch (digitType) {
-            case HOUR_FIRST:
-                return hourFirst;
-            case HOUR_SECOND:
-                return hourSecond;
-            case MINUTE_FIRST:
-                return minuteFirst;
-            case MINUTE_SECOND:
-                return minuteSecond;
-            case SECOND_FIRST:
-                return secondFirst;
-            case SECOND_SECOND:
-                return secondSecond;
+            case HOUR_FIRST: return hourFirst;
+            case HOUR_SECOND: return hourSecond;
+            case MINUTE_FIRST: return minuteFirst;
+            case MINUTE_SECOND: return minuteSecond;
+            case SECOND_FIRST: return secondFirst;
+            case SECOND_SECOND: return secondSecond;
             default:
                 plugin.getLogger().warning("Unknown digit type: " + digitType);
                 return 0;

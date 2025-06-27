@@ -35,9 +35,10 @@ public class GeneralConfig {
             worldName = "world";
         }
         bukkitWorld = Bukkit.getWorld(worldName);
-        if (bukkitWorld == null || bukkitWorld.toString().isEmpty()) {
-            plugin.getLogger().warning("bukkitWorld is null, \"world\" was adapted as WE world");
-            world = BukkitAdapter.adapt(Bukkit.getWorld("world"));
+        if (bukkitWorld == null) {
+            plugin.getLogger().warning("The world provided in the config is null, \"world\" was adapted as WE world");
+            bukkitWorld = Bukkit.getWorld("world");
+            world = BukkitAdapter.adapt(bukkitWorld);
         } else world = BukkitAdapter.adapt(bukkitWorld);
 
         String[] coordinateKeys = {
@@ -58,31 +59,28 @@ public class GeneralConfig {
                 int y = Integer.parseInt(coords[1]);
                 int z = Integer.parseInt(coords[2]);
 
+                Location location = new Location(bukkitWorld, x, y, z);
                 switch (key) {
-                    case "hour-first": {
-                        hourFirst = new Location(bukkitWorld, x, y, z);
+                    case "hour-first":
+                        hourFirst = location;
                         break;
-                    }
-                    case "hour-second": {
-                        hourSecond = new Location(bukkitWorld, x, y, z);
+                    case "hour-second":
+                        hourSecond = location;
                         break;
-                    }
-                    case "minute-first": {
-                        minuteFirst = new Location(bukkitWorld, x, y, z);
+                    case "minute-first":
+                        minuteFirst = location;
                         break;
-                    }
-                    case "minute-second": {
-                        minuteSecond = new Location(bukkitWorld, x, y, z);
+                    case "minute-second":
+                        minuteSecond = location;
                         break;
-                    }
-                    case "second-first": {
-                        secondFirst = new Location(bukkitWorld, x, y, z);
+                    case "second-first":
+                        secondFirst = location;
                         break;
-                    }
-                    case "second-second": {
-                        secondSecond = new Location(bukkitWorld, x, y, z);
+                    case "second-second":
+                        secondSecond = location;
                         break;
-                    }
+                    default:
+                        throw new IllegalArgumentException();
                 }
             } catch (NumberFormatException e) {
                 plugin.getLogger().warning("Invalid format for " + key + " coordinates");
