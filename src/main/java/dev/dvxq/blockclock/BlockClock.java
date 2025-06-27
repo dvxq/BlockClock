@@ -1,7 +1,5 @@
 package dev.dvxq.blockclock;
 
-import dev.dvxq.blockclock.commands.UpdateClockCommand;
-import dev.dvxq.blockclock.commands.tes;
 import dev.dvxq.blockclock.config.GeneralConfig;
 import dev.dvxq.blockclock.placement.*;
 import dev.dvxq.blockclock.util.ClockManager;
@@ -37,9 +35,6 @@ public final class BlockClock extends JavaPlugin {
         minuteSecondStrategy = new MinuteSecondStrategy(clockManager, config);
         secondFirstStrategy = new SecondFirstStrategy(clockManager, config);
         secondSecondStrategy = new SecondSecondStrategy(clockManager, config);
-
-        getCommand("test").setExecutor(new tes(clockManager));
-        getCommand("updatec").setExecutor(new UpdateClockCommand(clockManager));
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             clockManager.placeClock();
