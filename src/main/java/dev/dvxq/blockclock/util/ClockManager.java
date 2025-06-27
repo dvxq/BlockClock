@@ -90,7 +90,7 @@ public class ClockManager {
         int minuteFirst = minutes / 10;
         int minuteSecond = minutes % 10;
         int secondFirst = seconds / 10;
-        int secondSecond = secondFirst % 10;
+        int secondSecond = seconds % 10;
 
         switch (digitType) {
             case HOUR_FIRST:
