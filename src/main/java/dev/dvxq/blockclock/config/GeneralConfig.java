@@ -20,6 +20,7 @@ public class GeneralConfig {
     public Location minuteSecond;
     public Location secondFirst;
     public Location secondSecond;
+    public long updateFrequency;
     private org.bukkit.World bukkitWorld;
 
     public GeneralConfig(FileConfiguration config, BlockClock plugin) {
@@ -40,6 +41,12 @@ public class GeneralConfig {
             bukkitWorld = Bukkit.getWorld("world");
             world = BukkitAdapter.adapt(bukkitWorld);
         } else world = BukkitAdapter.adapt(bukkitWorld);
+
+        Long frequency = config.getLong("update-frequency");
+        if (frequency == null || frequency < 1) {
+            plugin.getLogger().warning("Frequency values is invalid. Automatically was set 20 ticks");
+            updateFrequency = 20;
+        } else updateFrequency = frequency;
 
         String[] coordinateKeys = {
                 "hour-first", "hour-second", "minute-first", "minute-second", "second-first", "second-second"

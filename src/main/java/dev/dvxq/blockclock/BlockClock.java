@@ -46,7 +46,7 @@ public final class BlockClock extends JavaPlugin {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             clockManager.placeClock();
-        }, 0L, 20L);
+        }, 0L, config.getUpdateFrequency());
     }
 
     @Override
@@ -63,17 +63,17 @@ public final class BlockClock extends JavaPlugin {
         }
     }
     private void copyAndSyncDataFolder() {
-        File targetFolder = new File(getDataFolder(), "data");
-        getLogger().info("Checking 'data' folder at " + targetFolder.getAbsolutePath());
+        File targetFolder = new File(getDataFolder(), "schems");
+        getLogger().info("Checking 'schems' folder at " + targetFolder.getAbsolutePath());
 
         if (!targetFolder.exists()) {
             getLogger().info("Data folder not found, creating and copying from resources...");
             try {
                 targetFolder.mkdirs();
-                copyFolderFromResources("data", targetFolder);
+                copyFolderFromResources("schems", targetFolder);
                 getLogger().info("Initial copy of 'data' folder completed.");
             } catch (IOException e) {
-                getLogger().severe("Failed to create and copy 'data' folder: " + e.getMessage());
+                getLogger().severe("Failed to create and copy 'schems' folder: " + e.getMessage());
                 return;
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
@@ -81,12 +81,12 @@ public final class BlockClock extends JavaPlugin {
         }
 
         try {
-            syncMissingFiles("data", targetFolder);
+            syncMissingFiles("schems", targetFolder);
             getLogger().info("Data folder synchronization completed.");
         } catch (IOException e) {
-            getLogger().severe("Failed to sync 'data' folder: " + e.getMessage());
+            getLogger().severe("Failed to sync 'schems' folder: " + e.getMessage());
         } catch (URISyntaxException e) {
-            getLogger().severe("Failed to sync 'data' folder: " + e.getMessage());
+            getLogger().severe("Failed to sync 'schems' folder: " + e.getMessage());
         }
     }
     private void syncMissingFiles(String resourcePath, File targetFolder) throws IOException, URISyntaxException {
