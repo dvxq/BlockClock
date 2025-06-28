@@ -46,6 +46,7 @@ public class ClockManager {
             clipboard = reader.read();
         } catch (FileNotFoundException e) {
             plugin.getLogger().warning("Schem not found");
+            plugin.getPluginLoader().disablePlugin(plugin);
         } catch (IOException e) {
             plugin.getLogger().warning("Error while reading schem: " + e.getMessage());
         }

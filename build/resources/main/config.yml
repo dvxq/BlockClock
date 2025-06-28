@@ -1,6 +1,9 @@
+update-frequency: 20
 coordinates:
-  world: "world"
-  hour-first: 124 12 124
-  hour-second: 124 12 124
-  minute-first: 124 12 124
-  minute-second: 124 12 124
+  world: 'world'
+  hour-first: 154 79 -186
+  hour-second: 154 79 -194
+  minute-first: 154 79 -204
+  minute-second: 154 79 -213
+  second-first: 154 79 -223
+  second-second: 154 79 -231
